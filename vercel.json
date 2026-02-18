@@ -1,17 +1,19 @@
 {
   "version": 2,
-  "installCommand": "npm install && npx esbuild apps/api/src/handler.ts --bundle --platform=node --target=node18 --outfile=apps/api/dist/handler.js --external:bcrypt",
+
+  "installCommand": "npm install && npm run build --workspace=packages/shared && npx esbuild apps/api/src/handler.ts --bundle --platform=node --target=node18 --outfile=api/index.js --external:bcrypt",
+
   "builds": [
     {
-      "src": "apps/api/dist/handler.js",
+      "src": "api/index.js",
       "use": "@vercel/node"
     }
   ],
+
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "apps/api/dist/handler.js"
+      "dest": "api/index.js"
     }
   ]
 }
-
