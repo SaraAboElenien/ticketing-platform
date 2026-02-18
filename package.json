@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "build:vercel": "npm run build --workspace=packages/shared && npx esbuild apps/api/src/handler.ts --bundle --platform=node --target=node18 --outfile=api/index.js --external:bcrypt --footer:js=\"if(module.exports.default){module.exports=module.exports.default;}\"",
+    "build:vercel": "npm run build --workspace=packages/shared && npx esbuild apps/api/src/handler.ts --bundle --platform=node --target=node18 --outfile=api/handler.js --external:bcrypt",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "clean": "turbo run clean",

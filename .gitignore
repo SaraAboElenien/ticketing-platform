@@ -12,6 +12,7 @@ dist/
 build/
 .next/
 out/
+api/handler.js
 
 # Environment variables — never commit real secrets
 .env
