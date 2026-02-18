@@ -1,12 +1,10 @@
 {
   "version": 2,
+  "installCommand": "npm install && npm run build --workspace=packages/shared",
   "builds": [
     {
       "src": "apps/api/src/handler.ts",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["packages/shared/**/*"]
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
