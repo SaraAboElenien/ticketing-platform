@@ -53,5 +53,15 @@ temp/
 tmp/
 
 # Internal documentation — not for public visibility
-*.md
+# README.md is excluded so it stays visible on GitHub
+ARCHITECTURE.md
+AUTH_FEATURES.md
+DUMMY_DATA_GUIDE.md
+ENV_AUDIT.md
+FRONTEND_PLAN.md
+GOOGLE_OAUTH_SETUP.md
+POSTMAN_AUTH_TESTS.md
+PROJECT_REFERENCE.md
+QUICK_START.md
+SETUP.md
 
