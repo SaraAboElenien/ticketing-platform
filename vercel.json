@@ -1,7 +1,7 @@
 {
   "version": 2,
 
-  "installCommand": "npm install && npm run build --workspace=packages/shared && npx esbuild apps/api/src/handler.ts --bundle --platform=node --target=node18 --outfile=api/index.js --external:bcrypt",
+  "installCommand": "npm install && npm run build --workspace=packages/shared && npx esbuild apps/api/src/handler.ts --bundle --platform=node --target=node18 --outfile=api/index.js --external:bcrypt --footer:js='if(module.exports.default){module.exports=module.exports.default;}'",
 
   "builds": [
     {
