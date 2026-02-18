@@ -79,12 +79,6 @@ export function createApp(): Express {
         mongodb: mongoOk ? 'connected' : 'disconnected',
         redis: redisOk ? 'connected' : 'disconnected',
       },
-      // Temporary debug — shows if env vars exist (not their values)
-      envCheck: {
-        MONGODB_URI: !!process.env.MONGODB_URI,
-        REDIS_URL: !!process.env.REDIS_URL,
-        NODE_ENV: process.env.NODE_ENV || 'not set',
-      },
     });
   });
 
