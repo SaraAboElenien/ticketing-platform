@@ -6,7 +6,6 @@
  * the update fails and no booking is created. This is race-condition proof.
  */
 
-import mongoose from 'mongoose';
 import { Booking as BookingModel } from '../../core/models/Booking.model';
 import { Event } from '../../core/models/Event.model';
 import {
@@ -87,14 +86,24 @@ export class BookingService {
       throw new ConflictError('No tickets available — sold out or concurrent booking took them');
     }
 
-    // Step 4: Create booking document(s)
+    // Step 4: Create a single booking document with the quantity
     // If this step fails, we must restore the tickets we just reserved
     try {
-      if (quantity === 1) {
-        return await this.createSingleBooking(data, userId, updatedEvent);
-      } else {
-        return await this.createMultipleBookings(data, userId, updatedEvent, quantity);
-      }
+      const bookingCount = await BookingModel.countDocuments({ eventId: updatedEvent._id });
+      const ticketNumber = generateTicketNumber(updatedEvent._id.toString(), bookingCount + 1);
+
+      const booking = new BookingModel({
+        userId,
+        eventId: updatedEvent._id,
+        ticketNumber,
+        quantity,
+        status: BookingStatus.CONFIRMED,
+        idempotencyKey: data.idempotencyKey,
+        bookingDate: new Date(),
+      });
+
+      await booking.save();
+      return this.getBookingById(booking._id.toString());
     } catch (error) {
       // ROLLBACK: Restore the atomically decremented tickets
       logger.error('Booking creation failed, restoring reserved tickets', {
@@ -111,73 +120,6 @@ export class BookingService {
     } finally {
       // Invalidate cache regardless of success/failure
       await this.availabilityService.invalidateCache(data.eventId);
-    }
-  }
-
-  /**
-   * Create a single booking (fast path — no transaction needed)
-   */
-  private async createSingleBooking(
-    data: CreateBookingDto,
-    userId: string,
-    event: any
-  ): Promise<any> {
-    // Generate ticket number using a counter based on current booking count
-    const bookingCount = await BookingModel.countDocuments({ eventId: event._id });
-    const ticketNumber = generateTicketNumber(event._id.toString(), bookingCount + 1);
-
-    const booking = new BookingModel({
-      userId,
-      eventId: event._id,
-      ticketNumber,
-      status: BookingStatus.CONFIRMED,
-      idempotencyKey: data.idempotencyKey,
-      bookingDate: new Date(),
-    });
-
-    await booking.save();
-    return this.getBookingById(booking._id.toString());
-  }
-
-  /**
-   * Create multiple bookings in a transaction (multi-ticket path)
-   */
-  private async createMultipleBookings(
-    data: CreateBookingDto,
-    userId: string,
-    event: any,
-    quantity: number
-  ): Promise<any> {
-    const session = await mongoose.startSession();
-    session.startTransaction();
-
-    try {
-      const bookingCount = await BookingModel.countDocuments({ eventId: event._id }).session(session);
-
-      const bookings = [];
-      for (let i = 0; i < quantity; i++) {
-        const ticketNumber = generateTicketNumber(event._id.toString(), bookingCount + i + 1);
-        const booking = new BookingModel({
-          userId,
-          eventId: event._id,
-          ticketNumber,
-          status: BookingStatus.CONFIRMED,
-          idempotencyKey: `${data.idempotencyKey}-${i}`, // Unique key per ticket
-          bookingDate: new Date(),
-        });
-        bookings.push(booking);
-      }
-
-      await BookingModel.insertMany(bookings, { session });
-      await session.commitTransaction();
-
-      // Return all created bookings
-      return this.getBookingById(bookings[0]._id.toString());
-    } catch (error) {
-      await session.abortTransaction();
-      throw error;
-    } finally {
-      await session.endSession();
     }
   }
 
@@ -285,9 +227,10 @@ export class BookingService {
 
     await booking.save();
 
-    // Atomically restore the ticket to Event.availableTickets
+    // Atomically restore all tickets from this booking to Event.availableTickets
+    const qty = booking.quantity ?? 1;
     await Event.findByIdAndUpdate(booking.eventId, {
-      $inc: { availableTickets: 1, version: 1 },
+      $inc: { availableTickets: qty, version: 1 },
     });
 
     // Invalidate availability cache

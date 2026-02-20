@@ -13,6 +13,7 @@ export interface IBooking extends Document {
   userId: mongoose.Types.ObjectId;
   eventId: mongoose.Types.ObjectId;
   ticketNumber: string;
+  quantity: number;
   bookingDate: Date;
   status: BookingStatus;
   idempotencyKey: string;
@@ -42,6 +43,12 @@ const bookingSchema = new Schema<IBooking>(
       type: String,
       required: true,
       unique: true, // Creates index automatically — no separate index needed
+    },
+    quantity: {
+      type: Number,
+      required: true,
+      default: 1,
+      min: 1,
     },
     bookingDate: {
       type: Date,

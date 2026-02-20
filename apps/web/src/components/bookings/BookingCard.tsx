@@ -6,6 +6,14 @@ import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import { formatDate, formatPrice, ticketLabel } from '@/utils/formatters';
 
+interface PopulatedEvent {
+  _id: string;
+  name: string;
+  date: string;
+  venue: string;
+  price: number;
+}
+
 interface BookingCardProps {
   booking: {
     _id: string;
@@ -13,13 +21,8 @@ interface BookingCardProps {
     status: string;
     quantity?: number;
     createdAt: string;
-    event?: {
-      _id: string;
-      name: string;
-      date: string;
-      venue: string;
-      price: number;
-    };
+    /** Populated by Mongoose — the field is called eventId but contains the full event object */
+    eventId?: PopulatedEvent;
   };
   onCancel: (bookingId: string, eventName: string) => void;
 }
@@ -32,7 +35,7 @@ const statusVariant: Record<string, 'success' | 'warning' | 'danger' | 'neutral'
 };
 
 export default function BookingCard({ booking, onCancel }: BookingCardProps) {
-  const ev = booking.event;
+  const ev = booking.eventId;
   const qty = booking.quantity ?? 1;
 
   return (
