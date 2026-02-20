@@ -1,18 +1,27 @@
 /**
- * Email service using Resend
+ * Email service using Nodemailer (Gmail SMTP)
  * Sends transactional emails (verification, password reset, etc.)
  *
  * Behaviour:
- *  - RESEND_API_KEY present  → sends real emails via Resend
- *  - RESEND_API_KEY absent   → logs the email content to the terminal (development fallback)
+ *  - SMTP_USER + SMTP_PASS present  → sends real emails via Gmail SMTP
+ *  - Missing credentials             → logs the email content to the terminal (development fallback)
  */
 
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 import { config } from '../../config';
 import { logger } from '../utils/logger';
 
-// Initialize client only when API key is present
-const resend = config.email.apiKey ? new Resend(config.email.apiKey) : null;
+// Initialize transporter only when SMTP credentials are present
+const transporter =
+  config.email.smtpUser && config.email.smtpPass
+    ? nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: config.email.smtpUser,
+          pass: config.email.smtpPass,
+        },
+      })
+    : null;
 
 export interface EmailOptions {
   to: string;
@@ -21,13 +30,13 @@ export interface EmailOptions {
 }
 
 /**
- * Send an email via Resend.
- * Falls back to terminal logging when no API key is configured.
+ * Send an email via Nodemailer (Gmail SMTP).
+ * Falls back to terminal logging when no SMTP credentials are configured.
  */
 export async function sendEmail(options: EmailOptions): Promise<void> {
-  if (!resend) {
+  if (!transporter) {
     // Development fallback: log email content so engineers can manually verify flows
-    logger.info('[Email] Would send email (no RESEND_API_KEY set):', {
+    logger.info('[Email] Would send email (no SMTP credentials set):', {
       to: options.to,
       subject: options.subject,
     });
@@ -48,8 +57,8 @@ export async function sendEmail(options: EmailOptions): Promise<void> {
   }
 
   try {
-    await resend.emails.send({
-      from: config.email.from,
+    await transporter.sendMail({
+      from: `"${config.email.appName}" <${config.email.smtpUser}>`,
       to: options.to,
       subject: options.subject,
       html: options.html,
@@ -58,7 +67,6 @@ export async function sendEmail(options: EmailOptions): Promise<void> {
     logger.info('[Email] Sent successfully', { to: options.to, subject: options.subject });
   } catch (error) {
     // Log but do not throw — email failures must not break auth flows
-    // Consider adding a retry queue (e.g. BullMQ) for production reliability
     logger.error('[Email] Failed to send email:', { to: options.to, error });
   }
 }

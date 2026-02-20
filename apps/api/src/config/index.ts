@@ -54,10 +54,10 @@ interface Config {
   // Logging
   logLevel: string;
 
-  // Email
+  // Email (Nodemailer / Gmail SMTP)
   email: {
-    apiKey: string;   // Resend API key (empty string = dev fallback mode)
-    from: string;
+    smtpUser: string;   // Gmail address (empty string = dev fallback mode)
+    smtpPass: string;   // Gmail App Password
     appName: string;
     frontendUrl: string;
   };
@@ -135,9 +135,9 @@ export const config: Config = {
   logLevel: getEnv('LOG_LEVEL', 'info'),
 
   email: {
-    // Empty string = no API key; service will fall back to terminal logging
-    apiKey: process.env.RESEND_API_KEY || '',
-    from: getEnv('FROM_EMAIL', 'onboarding@resend.dev'),
+    // Empty string = no credentials; service will fall back to terminal logging
+    smtpUser: process.env.SMTP_USER || '',
+    smtpPass: process.env.SMTP_PASS || '',
     appName: getEnv('APP_NAME', 'Ticketing Platform'),
     frontendUrl: getEnv('FRONTEND_URL', 'http://localhost:5173'),
   },
