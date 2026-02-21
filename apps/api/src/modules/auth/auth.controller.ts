@@ -8,14 +8,25 @@ import { Request, Response, NextFunction } from 'express';
 import { AuthService } from './auth.service';
 import { ApiResponse } from '@ticketing-platform/shared';
 import { cacheIdempotencyResponse } from '../../core/middleware/idempotency.middleware';
+import { config } from '../../config';
 
-// Shared cookie options for the httpOnly refresh token
-const REFRESH_COOKIE_OPTIONS = {
-  httpOnly: true,                                      // Not accessible via JS
-  secure: process.env.NODE_ENV === 'production',       // HTTPS only in production
-  sameSite: 'strict' as const,                         // Prevent CSRF
-  maxAge: 7 * 24 * 60 * 60 * 1000,                    // 7 days in ms
-};
+// Cookie options for the httpOnly refresh token.
+// Cross-origin (frontend on different domain than API) requires SameSite=None; Secure so the browser sends the cookie.
+function getRefreshCookieOptions(): { httpOnly: true; secure: boolean; sameSite: 'strict' | 'none'; maxAge: number } {
+  const isProduction = config.nodeEnv === 'production';
+  const corsOrigin = config.corsOrigin;
+  const isCrossOrigin = Array.isArray(corsOrigin)
+    ? corsOrigin.some((o) => o && !o.includes('localhost'))
+    : !!corsOrigin && !String(corsOrigin).includes('localhost');
+  const useCrossSiteCookie = isProduction || isCrossOrigin;
+
+  return {
+    httpOnly: true,
+    secure: useCrossSiteCookie || isProduction,
+    sameSite: useCrossSiteCookie ? ('none' as const) : ('strict' as const),
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  };
+}
 
 export class AuthController {
   private authService: AuthService;
@@ -58,7 +69,7 @@ export class AuthController {
       const result = await this.authService.login(req.body);
 
       // Set refresh token as httpOnly cookie (more secure than body-only delivery)
-      res.cookie('refreshToken', result.refreshToken, REFRESH_COOKIE_OPTIONS);
+      res.cookie('refreshToken', result.refreshToken, getRefreshCookieOptions());
 
       const response: ApiResponse = {
         success: true,
@@ -115,7 +126,7 @@ export class AuthController {
         await this.authService.logout(req.user.id);
       }
 
-      res.clearCookie('refreshToken');
+      res.clearCookie('refreshToken', getRefreshCookieOptions());
 
       const response: ApiResponse = {
         success: true,
@@ -155,7 +166,7 @@ export class AuthController {
     try {
       const result = await this.authService.verifyEmail(req.body.code, req.body.email);
 
-      res.cookie('refreshToken', result.refreshToken, REFRESH_COOKIE_OPTIONS);
+      res.cookie('refreshToken', result.refreshToken, getRefreshCookieOptions());
 
       const response: ApiResponse = {
         success: true,
@@ -237,7 +248,7 @@ export class AuthController {
       const result = await this.authService.authenticateWithGoogle(req.body.code);
 
       // Set the refresh token as an httpOnly cookie, consistent with other auth flows
-      res.cookie('refreshToken', result.refreshToken, REFRESH_COOKIE_OPTIONS);
+      res.cookie('refreshToken', result.refreshToken, getRefreshCookieOptions());
 
       const response: ApiResponse = {
         success: true,
