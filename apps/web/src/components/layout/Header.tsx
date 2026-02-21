@@ -16,10 +16,10 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-neutral-200 bg-white/80 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-neutral-200 bg-white/95 backdrop-blur-md shadow-sm">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo / Brand */}
-        <Link to="/" className="flex items-center gap-2 text-lg font-bold text-primary-600">
+        <Link to="/" className="flex items-center gap-2 text-lg font-bold text-primary-600 hover:text-primary-700 transition-colors">
           {/* Ticket icon */}
           <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round"

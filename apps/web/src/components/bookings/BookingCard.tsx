@@ -39,7 +39,7 @@ export default function BookingCard({ booking, onCancel }: BookingCardProps) {
   const qty = booking.quantity ?? 1;
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-neutral-200 bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-3 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm hover:shadow-md transition-all sm:flex-row sm:items-center sm:justify-between">
       {/* Left: event info */}
       <div className="space-y-1">
         <div className="flex items-center gap-2">

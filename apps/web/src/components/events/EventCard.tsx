@@ -24,12 +24,12 @@ export default function EventCard({ event }: EventCardProps) {
   return (
     <Link
       to={`/events/${event._id}`}
-      className="group flex flex-col rounded-xl border border-neutral-200 bg-white shadow-sm transition hover:shadow-md"
+      className="group flex flex-col rounded-2xl border border-neutral-200 bg-white shadow-sm transition-all hover:shadow-lg hover:-translate-y-1 overflow-hidden"
     >
       {/* Card body */}
       <div className="flex flex-1 flex-col p-5">
         <div className="mb-3 flex items-start justify-between gap-2">
-          <h3 className="text-lg font-semibold text-neutral-900 group-hover:text-primary-600 transition-colors line-clamp-2">
+          <h3 className="text-lg font-semibold text-neutral-900 group-hover:text-primary-600 transition-colors duration-200 line-clamp-2">
             {event.name}
           </h3>
           <AvailabilityBadge
@@ -59,7 +59,7 @@ export default function EventCard({ event }: EventCardProps) {
       </div>
 
       {/* Footer with price */}
-      <div className="border-t border-neutral-100 px-5 py-3">
+      <div className="border-t border-neutral-100 bg-gradient-to-r from-primary-50 to-transparent px-5 py-3">
         <span className="text-lg font-bold text-primary-600">{formatPrice(event.price)}</span>
         <span className="ml-1 text-xs text-neutral-400">/ ticket</span>
       </div>

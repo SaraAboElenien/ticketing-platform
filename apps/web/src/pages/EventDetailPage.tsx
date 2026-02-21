@@ -100,8 +100,8 @@ export default function EventDetailPage() {
           label="Tickets"
           value={`${ticketLabel(event.availableTickets)} left of ${event.totalTickets}`}
         />
-        <div className="flex items-center gap-3 rounded-lg border border-neutral-200 p-4">
-          <div className="text-neutral-400">
+        <div className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-gradient-to-br from-accent-50 to-transparent p-4">
+          <div className="text-accent-600">
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -168,8 +168,8 @@ function InfoItem({
   value: string;
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-neutral-200 p-4">
-      <div className="text-neutral-400">{icon}</div>
+    <div className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white p-4 hover:shadow-sm transition-shadow">
+      <div className="text-primary-500">{icon}</div>
       <div>
         <p className="text-xs text-neutral-400">{label}</p>
         <p className="font-medium text-neutral-900">{value}</p>

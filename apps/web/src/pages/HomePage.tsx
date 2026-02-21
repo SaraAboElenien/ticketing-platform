@@ -17,25 +17,29 @@ export default function HomePage() {
   return (
     <div>
       {/* ── Hero Section ──────────────────────────────────────────────── */}
-      <section className="bg-gradient-to-br from-primary-600 to-primary-800 text-white">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <section className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 text-white overflow-hidden">
+        {/* Decorative accent */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary-500/20 rounded-full blur-3xl"></div>
+        
+        <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
               Discover &amp; Book Amazing Events
             </h1>
-            <p className="mt-4 text-lg text-primary-100">
+            <p className="mt-6 text-lg text-primary-100 leading-relaxed">
               Browse upcoming concerts, conferences, and more. Secure your tickets
               instantly with our fast, reliable booking system.
             </p>
-            <div className="mt-8 flex gap-3">
+            <div className="mt-10 flex flex-wrap gap-4">
               <Link to="/events">
-                <Button size="lg" className="bg-white text-primary-700 hover:bg-primary-50">
+                <Button size="lg" className="bg-white text-primary-700 hover:bg-primary-50 shadow-lg hover:shadow-xl transition-all">
                   Browse Events
                 </Button>
               </Link>
               {!isAuthenticated && (
                 <Link to="/register">
-                  <Button size="lg" variant="ghost" className="text-white border border-white/30 hover:bg-white/10">
+                  <Button size="lg" variant="ghost" className="text-white border-2 border-white/40 hover:bg-white/10 hover:border-white/60 backdrop-blur-sm transition-all">
                     Sign Up Free
                   </Button>
                 </Link>

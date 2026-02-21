@@ -13,3 +13,15 @@ html {
   outline-offset: 2px;
 }
 
+/* Enhanced body styling */
+body {
+  @apply antialiased;
+  font-feature-settings: 'kern' 1;
+  text-rendering: optimizeLegibility;
+}
+
+/* Smooth transitions for interactive elements */
+a, button {
+  @apply transition-all duration-200;
+}
+
