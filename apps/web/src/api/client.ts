@@ -49,6 +49,13 @@ client.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    // Never try refresh when the failed request was an auth endpoint (login, register, etc.)
+    // Otherwise a failed login (401) would trigger refresh → "Refresh token is required" instead of the real error
+    const requestUrl = originalRequest.url ?? '';
+    if (requestUrl.includes('/auth/')) {
+      return Promise.reject(error);
+    }
+
     // If a refresh is already in-flight, queue this request
     if (isRefreshing) {
       return new Promise((resolve, reject) => {

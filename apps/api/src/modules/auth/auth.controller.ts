@@ -12,7 +12,15 @@ import { config } from '../../config';
 
 // Cookie options for the httpOnly refresh token.
 // Cross-origin (frontend on different domain than API) requires SameSite=None; Secure so the browser sends the cookie.
-function getRefreshCookieOptions(): { httpOnly: true; secure: boolean; sameSite: 'strict' | 'none'; maxAge: number } {
+type RefreshCookieOptions = {
+  httpOnly: true;
+  secure: boolean;
+  sameSite: 'strict' | 'none';
+  path: string;
+  maxAge: number;
+};
+
+function getRefreshCookieOptions(): RefreshCookieOptions {
   const isProduction = config.nodeEnv === 'production';
   const corsOrigin = config.corsOrigin;
   const isCrossOrigin = Array.isArray(corsOrigin)
@@ -24,6 +32,7 @@ function getRefreshCookieOptions(): { httpOnly: true; secure: boolean; sameSite:
     httpOnly: true,
     secure: useCrossSiteCookie || isProduction,
     sameSite: useCrossSiteCookie ? ('none' as const) : ('strict' as const),
+    path: '/',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   };
 }
