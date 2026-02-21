@@ -33,7 +33,7 @@ export default function HomePage() {
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Link to="/events">
-                <Button size="lg" className="bg-white text-primary-700 hover:bg-primary-50 shadow-lg hover:shadow-xl transition-all">
+                <Button size="lg" className=" text-primary-700 hover:bg-primary-50 shadow-lg hover:shadow-xl transition-all">
                   Browse Events
                 </Button>
               </Link>
