@@ -19,8 +19,8 @@ export default function Layout() {
         position="top-right"
         toastOptions={{
           className: '!bg-bg2 !text-[#F8F9FF] !border !border-[rgba(255,255,255,.1)]',
-          success: { iconTheme: { primary: '#6EE7B7' } },
-          error: { iconTheme: { primary: '#F87171' } },
+          success: { iconTheme: { primary: '#6EE7B7', secondary: '#0E1420' } },
+          error: { iconTheme: { primary: '#F87171', secondary: '#0E1420' } },
         }}
       />
       <Header />
