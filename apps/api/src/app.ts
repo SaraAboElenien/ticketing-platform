@@ -34,10 +34,16 @@ export function createApp(): Express {
   // Security middleware — sets various HTTP headers to prevent common attacks
   app.use(helmet());
 
-  // CORS configuration
+  // CORS: allow explicit CORS_ORIGIN list and any https://*.vercel.app (so new frontend URLs work after redesigns)
+  const allowedOrigins = Array.isArray(config.corsOrigin) ? config.corsOrigin : [config.corsOrigin];
+  const isVercelOrigin = (origin: string) => /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin);
   app.use(
     cors({
-      origin: config.corsOrigin,
+      origin: (origin, cb) => {
+        if (!origin) return cb(null, true); // same-origin or non-browser
+        if (allowedOrigins.some((o) => o === origin) || isVercelOrigin(origin)) return cb(null, true);
+        return cb(null, false);
+      },
       credentials: true,
     })
   );
@@ -55,6 +61,17 @@ export function createApp(): Express {
 
   // Rate limiting (applied to all routes)
   app.use(defaultRateLimiter);
+
+  // Root — so deployment URL (GET /) returns 200 instead of 404
+  app.get('/', (req, res) => {
+    res.status(200).json({
+      service: 'ticketing-platform-api',
+      status: 'ok',
+      version: 'v1',
+      health: '/health',
+      api: '/api/v1',
+    });
+  });
 
   // Shallow health check — just confirms the server process is alive
   app.get('/health', (req, res) => {

@@ -11,15 +11,21 @@ import axios, { InternalAxiosRequestConfig, AxiosError } from 'axios';
 import { API_PREFIX } from '@/types';
 
 const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, ''); // no trailing slash
+const baseURL = `${API_URL}${API_PREFIX}`;
 
-if (!API_URL && import.meta.env.PROD) {
-  console.error(
-    '[TicketHub] VITE_API_URL is not set. Set it in your deployment (e.g. Vercel Environment Variables) to your API base URL (e.g. https://your-api.vercel.app).'
-  );
+// One-time diagnostic: so you can confirm in DevTools what URL the app is using
+if (typeof window !== 'undefined') {
+  const kind = API_URL ? 'absolute' : 'relative (same-origin)';
+  console.info(`[TicketHub] API baseURL: ${kind} → ${baseURL || '(empty)'}`);
+  if (!API_URL && import.meta.env.PROD) {
+    console.error(
+      '[TicketHub] VITE_API_URL is not set. Set it in your deployment (e.g. Vercel Environment Variables) to your API base URL, then redeploy.'
+    );
+  }
 }
 
 const client = axios.create({
-  baseURL: `${API_URL}${API_PREFIX}`,
+  baseURL,
   withCredentials: true,
   headers: { 'Content-Type': 'application/json' },
 });
@@ -81,7 +87,7 @@ client.interceptors.response.use(
     try {
       // Call refresh endpoint — the httpOnly cookie carries the refresh token
       const { data } = await axios.post(
-        `${API_URL}${API_PREFIX}/auth/refresh`,
+        `${baseURL}/auth/refresh`,
         {},
         { withCredentials: true }
       );
