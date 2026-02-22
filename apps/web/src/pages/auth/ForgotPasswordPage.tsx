@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import * as authApi from '@/api/auth.api';
+import Alert from '@/components/ui/Alert';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import AuthPageLayout from '@/components/auth/AuthPageLayout';
@@ -51,9 +52,7 @@ export default function ForgotPasswordPage() {
       footerLinkLabel="Log in"
     >
       {serverError && (
-        <div className="rounded-[10px] bg-[rgba(220,38,38,.1)] border border-[rgba(220,38,38,.2)] p-3 text-sm text-[#F87171] mb-4" role="alert">
-          {serverError}
-        </div>
+        <Alert className="mb-4">{serverError}</Alert>
       )}
       {sent ? (
         <div className="space-y-4 text-center">

@@ -34,19 +34,21 @@ export default function Header() {
     navigate('/login');
   };
 
-  const linkClass = (path: string) =>
-    `text-[0.9rem] px-4 py-[7px] rounded-lg no-underline transition-all block ${
-      location.pathname === path
-        ? 'text-[#F8F9FF] bg-[rgba(255,255,255,.06)]'
-        : 'text-[rgba(248,249,255,.45)] hover:text-[#F8F9FF] hover:bg-[rgba(255,255,255,.05)]'
+  const linkClass = (path: string, isAdminLink?: boolean) => {
+    const isActive = isAdminLink ? location.pathname.startsWith('/admin') : location.pathname === path;
+    if (isActive && isAdminLink)
+      return 'text-[#F8F9FF] text-[0.88rem] px-4 py-[7px] rounded-lg no-underline bg-[rgba(124,58,237,.18)] border border-[rgba(124,58,237,.25)] transition-all block';
+    return `text-[0.88rem] px-4 py-[7px] rounded-lg no-underline transition-all block ${
+      isActive ? 'text-[#F8F9FF] bg-[rgba(255,255,255,.06)]' : 'text-[rgba(248,249,255,.45)] hover:text-[#F8F9FF] hover:bg-[rgba(255,255,255,.05)]'
     }`;
+  };
 
-  const mobileLinkClass = (path: string) =>
-    `text-[1rem] py-3 px-4 rounded-lg no-underline transition-all block w-full text-left border-b border-[rgba(255,255,255,.07)] last:border-0 ${
-      location.pathname === path
-        ? 'text-[#F8F9FF] bg-[rgba(255,255,255,.06)]'
-        : 'text-[rgba(248,249,255,.45)] hover:text-[#F8F9FF] hover:bg-[rgba(255,255,255,.05)]'
-    }`;
+  const mobileLinkClass = (path: string, isAdminLink?: boolean) => {
+    const isActive = isAdminLink ? location.pathname.startsWith('/admin') : location.pathname === path;
+    const base = 'text-[1rem] py-3 px-4 rounded-lg no-underline transition-all block w-full text-left border-b border-[rgba(255,255,255,.07)] last:border-0 ';
+    if (isActive && isAdminLink) return base + 'text-[#F8F9FF] bg-[rgba(124,58,237,.18)] border border-[rgba(124,58,237,.25)]';
+    return base + (isActive ? 'text-[#F8F9FF] bg-[rgba(255,255,255,.06)]' : 'text-[rgba(248,249,255,.45)] hover:text-[#F8F9FF] hover:bg-[rgba(255,255,255,.05)]');
+  };
 
   return (
     <header className="nav-animate sticky top-0 z-[100] flex h-16 items-center justify-between px-4 sm:px-8 lg:px-[52px] bg-[rgba(8,12,20,.88)] backdrop-blur-[20px] border-b border-[rgba(255,255,255,.07)]">
@@ -65,7 +67,7 @@ export default function Header() {
           </Link>
         )}
         {isAdmin && (
-          <Link to="/admin/events" className={linkClass('/admin/events')}>
+          <Link to="/admin/events" className={linkClass('/admin/events', true)}>
             Admin
           </Link>
         )}
@@ -141,9 +143,9 @@ export default function Header() {
               </Link>
             )}
             {isAdmin && (
-              <Link to="/admin/events" className={mobileLinkClass('/admin/events')} onClick={() => setMenuOpen(false)}>
-                Admin
-              </Link>
+            <Link to="/admin/events" className={mobileLinkClass('/admin/events', true)} onClick={() => setMenuOpen(false)}>
+              Admin
+            </Link>
             )}
           </div>
           <div className="p-4 border-t border-[rgba(255,255,255,.07)] space-y-2">

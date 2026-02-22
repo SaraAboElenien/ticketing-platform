@@ -4,6 +4,7 @@
  */
 
 import { useEvents } from '@/hooks/useEvents';
+import Alert from '@/components/ui/Alert';
 import EventCard from '@/components/events/EventCard';
 import EventFilters from '@/components/events/EventFilters';
 import Pagination from '@/components/ui/Pagination';
@@ -48,9 +49,7 @@ export default function EventsPage() {
         {loading ? (
           <Spinner className="py-16" size="lg" />
         ) : error ? (
-          <div className="rounded-[10px] bg-[rgba(220,38,38,.1)] border border-[rgba(220,38,38,.2)] p-6 text-center text-sm text-[#F87171]">
-            {error}
-          </div>
+          <Alert className="text-center">{error}</Alert>
         ) : events.length === 0 ? (
           <div className="text-center py-20 px-6">
             <div className="text-5xl mb-4 opacity-30">🎟</div>

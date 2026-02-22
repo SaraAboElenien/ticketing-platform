@@ -40,12 +40,9 @@ export default function EventDetailPage() {
   const canBook = event.status === 'published' && event.availableTickets > 0 && isAuthenticated;
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8 bg-bg">
-      <Link to="/events" className="mb-6 inline-flex items-center gap-1 text-sm text-[rgba(248,249,255,.45)] hover:text-purple-light transition-colors">
-        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-        </svg>
-        Back to events
+    <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-10 bg-bg">
+      <Link to="/events" className="back-link mb-6 inline-flex items-center gap-[7px] text-[0.85rem] text-[rgba(248,249,255,.45)] no-underline hover:text-[#F8F9FF] transition-colors">
+        <span className="back-arrow">←</span> Back to events
       </Link>
 
       <div className="flex flex-wrap items-start justify-between gap-4 mb-8">

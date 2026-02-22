@@ -30,6 +30,7 @@ a, button {
 :root {
   --bg: #080C14;
   --bg2: #0E1420;
+  --bg3: #141B2D;
   --purple: #7C3AED;
   --purple-light: #9B5CF6;
   --white: #F8F9FF;
@@ -63,6 +64,7 @@ a, button {
 
 /* Utility classes */
 .nav-animate { animation: navIn 0.6s ease both; }
+.fade-up-0 { animation: fadeUp 0.6s 0s ease both; }
 .fade-up-1 { animation: fadeUp 0.7s 0.1s ease both; }
 .fade-up-2 { animation: fadeUp 0.7s 0.2s ease both; }
 .fade-up-3 { animation: fadeUp 0.7s 0.3s ease both; }
@@ -147,13 +149,154 @@ a, button {
 .card-icon-col::before { top: -9px; }
 .card-icon-col::after { bottom: -9px; }
 
-.filter-select {
+.filter-select,
+.f-select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,.3)' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
 }
-.filter-select option { background: #1a2035; }
+.filter-select option,
+.f-select option { background: #1a2035; }
+
+/* Stat cards (admin) — gradient bar on top */
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--c1), var(--c2));
+}
+.sc-purple { --c1: #7C3AED; --c2: #9B5CF6; }
+.sc-green { --c1: #059669; --c2: #34D399; }
+.sc-blue { --c1: #1D4ED8; --c2: #60A5FA; }
+.sc-amber { --c1: #D97706; --c2: #FCD34D; }
+
+/* Form field input — admin/create/edit forms */
+.field-input {
+  width: 100%;
+  padding: 13px 16px;
+  background: #0E1420;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  color: #F8F9FF;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+}
+.field-input::placeholder { color: rgba(248, 249, 255, 0.2); }
+.field-input:focus {
+  border-color: rgba(124, 58, 237, 0.5);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+textarea.field-input {
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.6;
+}
+
+/* Table row hover + ticket progress bar */
+tbody tr { transition: background 0.2s; }
+tbody tr:hover { background: rgba(255, 255, 255, 0.025); }
+.tickets-bar { transition: width 0.6s ease; }
+.s-pub-dot { animation: pulse 2s ease-in-out infinite; }
+
+/* Back link (admin form) */
+.back-link:hover .back-arrow { transform: translateX(-3px); }
+.back-arrow { transition: transform 0.2s; display: inline-block; }
+
+/* Emoji picker buttons */
+.emoji-btn {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 0.18s;
+}
+.emoji-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.15);
+}
+.emoji-btn.selected {
+  background: rgba(124, 58, 237, 0.2);
+  border-color: rgba(124, 58, 237, 0.5);
+}
+
+/* Status radio cards (admin form) */
+.status-opt input { position: absolute; opacity: 0; pointer-events: none; }
+.status-opt label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: #0E1420;
+  transition: all 0.2s;
+  text-align: center;
+  margin: 0;
+  color: rgba(248, 249, 255, 0.45);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+.status-opt input:checked + label {
+  border-color: rgba(124, 58, 237, 0.5);
+  background: rgba(124, 58, 237, 0.12);
+  color: #F8F9FF;
+}
+.status-opt label:hover { border-color: rgba(255, 255, 255, 0.15); color: #F8F9FF; }
+
+/* Ticket preview (admin form) — header dot pattern + tear */
+.tkt-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+.tkt-tear-preview::before {
+  content: '';
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  border-top: 1.5px dashed rgba(255, 255, 255, 0.1);
+}
+
+/* Unsaved changes indicator (edit event) */
+.change-indicator {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 0.78rem;
+  color: #9B5CF6;
+  animation: fadeUp 0.3s ease both;
+}
+.change-indicator.visible { display: flex; }
+.change-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #9B5CF6;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+.tickets-sold-fill { transition: width 0.6s ease; }
 
 /* Scroll reveal */
 [data-reveal] {

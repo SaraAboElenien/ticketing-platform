@@ -3,6 +3,7 @@
  */
 
 import { useState } from 'react';
+import Alert from '@/components/ui/Alert';
 import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import toast from 'react-hot-toast';
@@ -52,9 +53,7 @@ export default function CancelModal({
     <Modal open={open} onClose={onClose} title="Cancel Booking">
       <div className="space-y-4">
         {error && (
-          <div className="rounded-[10px] bg-[rgba(220,38,38,.1)] border border-[rgba(220,38,38,.2)] p-3 text-sm text-[#F87171]" role="alert">
-            {error}
-          </div>
+          <Alert>{error}</Alert>
         )}
 
         <p className="text-sm text-[rgba(248,249,255,.45)]">

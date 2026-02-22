@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '@/hooks/useAuth';
 import * as authApi from '@/api/auth.api';
+import Alert from '@/components/ui/Alert';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import AuthPageLayout from '@/components/auth/AuthPageLayout';
@@ -87,9 +88,7 @@ export default function VerifyEmailPage() {
       footerLinkLabel="Log in"
     >
       {serverError && (
-        <div className="rounded-[10px] bg-[rgba(220,38,38,.1)] border border-[rgba(220,38,38,.2)] p-3 text-sm text-[#F87171] mb-4" role="alert">
-          {serverError}
-        </div>
+        <Alert className="mb-4">{serverError}</Alert>
       )}
       {successMsg && (
         <div className="rounded-[10px] bg-[rgba(5,150,105,.12)] border border-[rgba(5,150,105,.2)] p-3 text-sm text-[#6EE7B7] mb-4" role="status">

@@ -3,7 +3,7 @@
  * TicketHub dark theme: template-aligned status styles (Sold Out red, Limited amber, Available green, Cancelled gray).
  */
 
-type BadgeVariant = 'success' | 'warning' | 'danger' | 'info' | 'neutral';
+type BadgeVariant = 'success' | 'warning' | 'danger' | 'info' | 'neutral' | 'completed';
 
 interface BadgeProps {
   variant?: BadgeVariant;
@@ -18,6 +18,7 @@ const variantStyles: Record<BadgeVariant, string> = {
   danger: 'bg-[rgba(220,38,38,.12)] text-[#F87171] border border-[rgba(220,38,38,.2)]',
   info: 'bg-[rgba(59,130,246,.12)] text-[#60A5FA] border border-[rgba(59,130,246,.2)]',
   neutral: 'bg-[rgba(100,116,139,.12)] text-[#94A3B8] border border-[rgba(100,116,139,.2)]',
+  completed: 'bg-[rgba(124,58,237,.12)] text-[#C084FC] border border-[rgba(124,58,237,.2)]',
 };
 
 export default function Badge({

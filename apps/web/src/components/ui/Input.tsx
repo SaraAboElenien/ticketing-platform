@@ -1,7 +1,6 @@
 /**
- * Input — form input with label and inline error display.
- * TicketHub dark theme: bg-bg2, muted placeholder, purple focus ring.
- * Compatible with react-hook-form's register().
+ * Input — form input with label, optional left icon, and inline error.
+ * Uses field-input styling (TicketHub dark theme). Compatible with react-hook-form register().
  */
 
 import React from 'react';
@@ -9,36 +8,43 @@ import React from 'react';
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
+  /** Left-side icon (emoji or character) for field-input style */
+  icon?: React.ReactNode;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, id, className = '', ...rest }, ref) => {
+  ({ label, error, icon, id, className = '', ...rest }, ref) => {
     const inputId = id || rest.name;
+    const inputClass = `
+      field-input block w-full py-[13px] pr-4 text-[0.9rem]
+      disabled:cursor-not-allowed disabled:opacity-60
+      ${icon ? 'pl-10' : 'pl-4'}
+      ${error ? 'border-[rgba(248,81,73,.5)]' : ''}
+      ${className}
+    `.trim().replace(/\s+/g, ' ');
 
     return (
       <div className="space-y-1">
         {label && (
-          <label htmlFor={inputId} className="block text-[0.82rem] font-medium text-[rgba(248,249,255,.45)] mb-[7px] tracking-[0.01em]">
+          <label htmlFor={inputId} className="block text-[0.8rem] font-medium text-[rgba(248,249,255,.45)] mb-2 tracking-[0.01em]">
             {label}
           </label>
         )}
-        <input
-          ref={ref}
-          id={inputId}
-          className={`
-            block w-full px-4 py-[13px] bg-bg2 border border-[rgba(255,255,255,.07)] rounded-[10px]
-            text-[#F8F9FF] font-outfit text-[0.92rem] outline-none
-            placeholder-[rgba(248,249,255,.2)]
-            focus:border-[rgba(124,58,237,.5)] focus:shadow-[0_0_0_3px_rgba(124,58,237,.12)]
-            disabled:cursor-not-allowed disabled:opacity-60
-            transition-all
-            ${error ? 'border-[rgba(248,81,73,.5)] focus:border-danger-500 focus:shadow-[0_0_0_3px_rgba(248,81,73,.2)]' : ''}
-            ${className}
-          `}
-          aria-invalid={!!error}
-          aria-describedby={error ? `${inputId}-error` : undefined}
-          {...rest}
-        />
+        <div className="relative">
+          {icon && (
+            <span className="absolute left-[14px] top-1/2 -translate-y-1/2 text-[0.9rem] pointer-events-none">
+              {icon}
+            </span>
+          )}
+          <input
+            ref={ref}
+            id={inputId}
+            className={inputClass}
+            aria-invalid={!!error}
+            aria-describedby={error ? `${inputId}-error` : undefined}
+            {...rest}
+          />
+        </div>
         {error && (
           <p id={`${inputId}-error`} className="text-[0.8rem] text-[#F87171] mt-1" role="alert">
             {error}
