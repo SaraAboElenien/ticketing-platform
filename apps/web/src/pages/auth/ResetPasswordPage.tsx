@@ -1,6 +1,5 @@
 /**
- * ResetPasswordPage — reads the ?token= query param and lets the user
- * set a new password.
+ * ResetPasswordPage — reads the ?token= query param and lets the user set a new password.
  */
 
 import { useState } from 'react';
@@ -11,6 +10,7 @@ import { z } from 'zod';
 import * as authApi from '@/api/auth.api';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import AuthPageLayout from '@/components/auth/AuthPageLayout';
 import { getErrorMessage } from '@/utils/apiError';
 
 const schema = z
@@ -36,11 +36,7 @@ export default function ResetPasswordPage() {
   const [serverError, setServerError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ResetForm>({ resolver: zodResolver(schema) });
+  const { register, handleSubmit, formState: { errors } } = useForm<ResetForm>({ resolver: zodResolver(schema) });
 
   const onSubmit = async (values: ResetForm) => {
     setServerError('');
@@ -59,16 +55,15 @@ export default function ResetPasswordPage() {
     }
   };
 
-  // If there's no token in the URL, show an error
   if (!token) {
     return (
       <div className="flex min-h-[80vh] items-center justify-center px-4">
         <div className="text-center space-y-4">
-          <h1 className="text-xl font-bold text-danger-700">Invalid Reset Link</h1>
-          <p className="text-sm text-neutral-500">
+          <h1 className="text-xl font-bold text-[#F87171]">Invalid Reset Link</h1>
+          <p className="text-sm text-[rgba(248,249,255,.45)]">
             This link is missing a reset token. Please request a new one.
           </p>
-          <Link to="/forgot-password" className="text-primary-600 hover:underline text-sm">
+          <Link to="/forgot-password" className="text-purple-light hover:underline text-sm">
             Request new link
           </Link>
         </div>
@@ -77,42 +72,25 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center px-4">
-      <div className="w-full max-w-sm space-y-6">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-neutral-900">Set new password</h1>
-          <p className="mt-1 text-sm text-neutral-500">
-            Choose a strong password for your account.
-          </p>
+    <AuthPageLayout
+      title="Set new password"
+      subtitle="Choose a strong password for your account."
+      footerText="Back to"
+      footerLinkTo="/login"
+      footerLinkLabel="Log in"
+    >
+      {serverError && (
+        <div className="rounded-[10px] bg-[rgba(220,38,38,.1)] border border-[rgba(220,38,38,.2)] p-3 text-sm text-[#F87171] mb-4" role="alert">
+          {serverError}
         </div>
-
-        {serverError && (
-          <div className="rounded-lg bg-danger-50 p-3 text-sm text-danger-700" role="alert">
-            {serverError}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <Input
-            label="New Password"
-            type="password"
-            placeholder="••••••••"
-            error={errors.password?.message}
-            {...register('password')}
-          />
-          <Input
-            label="Confirm Password"
-            type="password"
-            placeholder="••••••••"
-            error={errors.confirmPassword?.message}
-            {...register('confirmPassword')}
-          />
-          <Button type="submit" fullWidth loading={loading}>
-            Reset password
-          </Button>
-        </form>
-      </div>
-    </div>
+      )}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <Input label="New Password" type="password" placeholder="••••••••" error={errors.password?.message} {...register('password')} />
+        <Input label="Confirm Password" type="password" placeholder="••••••••" error={errors.confirmPassword?.message} {...register('confirmPassword')} />
+        <Button type="submit" fullWidth loading={loading}>
+          Reset password
+        </Button>
+      </form>
+    </AuthPageLayout>
   );
 }
-

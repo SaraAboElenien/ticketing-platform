@@ -108,15 +108,14 @@ export default function AdminEventFormPage() {
   };
 
   if (loadingEvent) {
-    return <Spinner className="min-h-[60vh]" size="lg" />;
+    return <div className="min-h-[60vh] flex items-center justify-center bg-bg"><Spinner size="lg" /></div>;
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:px-8">
-      {/* Back link */}
+    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:px-8 bg-bg">
       <Link
         to="/admin/events"
-        className="mb-6 inline-flex items-center gap-1 text-sm text-neutral-500 hover:text-primary-600"
+        className="mb-6 inline-flex items-center gap-1 text-sm text-[rgba(248,249,255,.45)] hover:text-purple-light"
       >
         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -124,12 +123,12 @@ export default function AdminEventFormPage() {
         Back to events
       </Link>
 
-      <h1 className="text-2xl font-bold text-neutral-900 mb-6">
+      <h1 className="text-2xl font-bold text-[#F8F9FF] mb-6">
         {isEditMode ? 'Edit Event' : 'Create New Event'}
       </h1>
 
       {serverError && (
-        <div className="mb-4 rounded-lg bg-danger-50 p-3 text-sm text-danger-700" role="alert">
+        <div className="mb-4 rounded-[10px] bg-[rgba(220,38,38,.1)] border border-[rgba(220,38,38,.2)] p-3 text-sm text-[#F87171]" role="alert">
           {serverError}
         </div>
       )}
@@ -173,9 +172,9 @@ export default function AdminEventFormPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-neutral-700 mb-1">Status</label>
+          <label className="block text-[0.82rem] font-medium text-[rgba(248,249,255,.45)] mb-[7px]">Status</label>
           <select
-            className="block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="block w-full rounded-[10px] border border-[rgba(255,255,255,.07)] bg-bg2 px-4 py-[13px] text-[#F8F9FF] text-[0.92rem] outline-none focus:border-[rgba(124,58,237,.5)] focus:shadow-[0_0_0_3px_rgba(124,58,237,.12)]"
             {...register('status')}
           >
             <option value="draft">Draft</option>
@@ -184,7 +183,7 @@ export default function AdminEventFormPage() {
             <option value="completed">Completed</option>
           </select>
           {errors.status && (
-            <p className="mt-1 text-sm text-danger-600">{errors.status.message}</p>
+            <p className="mt-1 text-sm text-[#F87171]">{errors.status.message}</p>
           )}
         </div>
 

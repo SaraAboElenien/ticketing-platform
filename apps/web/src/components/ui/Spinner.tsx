@@ -14,7 +14,7 @@ export default function Spinner({ size = 'md', className = '' }: SpinnerProps) {
   return (
     <div className={`flex items-center justify-center ${className}`} role="status">
       <svg
-        className={`animate-spin text-primary-500 ${sizes[size]}`}
+        className={`animate-spin text-purple-light ${sizes[size]}`}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"

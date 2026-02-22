@@ -17,6 +17,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        /* ── TicketHub dark theme (from design templates) ──── */
+        bg: '#080C14',
+        bg2: '#0E1420',
+        bg3: '#141B2D',
+        purple: '#7C3AED',
+        'purple-light': '#9B5CF6',
+
         /* ── Brand / Primary (Deep Purple/Violet) ─────────── */
         primary: {
           50: '#f5f3ff',
@@ -99,7 +106,32 @@ const config: Config = {
       },
 
       fontFamily: {
-        sans: ['Poppins', 'system-ui', '-apple-system', 'sans-serif'],
+        outfit: ['Outfit', 'sans-serif'],
+        sans: ['Outfit', 'system-ui', '-apple-system', 'sans-serif'],
+      },
+      animation: {
+        navIn: 'navIn 0.6s ease both',
+        fadeUp: 'fadeUp 0.7s ease both',
+        gridDrift: 'gridDrift 20s ease-in-out infinite alternate',
+        glowPulse: 'glowPulse 6s ease-in-out infinite',
+      },
+      keyframes: {
+        navIn: {
+          from: { opacity: '0', transform: 'translateY(-10px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        fadeUp: {
+          from: { opacity: '0', transform: 'translateY(20px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        gridDrift: {
+          from: { transform: 'translateY(0)' },
+          to: { transform: 'translateY(-20px)' },
+        },
+        glowPulse: {
+          '0%, 100%': { opacity: '0.8', transform: 'translate(-50%, -55%) scale(1)' },
+          '50%': { opacity: '1', transform: 'translate(-50%, -55%) scale(1.08)' },
+        },
       },
     },
   },

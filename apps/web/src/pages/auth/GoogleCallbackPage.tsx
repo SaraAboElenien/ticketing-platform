@@ -1,11 +1,6 @@
 /**
  * GoogleCallbackPage — handles the redirect from Google OAuth consent.
- *
- * Flow:
- *  1. Google redirects here with ?code=... in the URL.
- *  2. We POST the code to /api/v1/auth/google.
- *  3. On success, store tokens + redirect home.
- *  4. On failure, show error with a link to /login.
+ * Flow: Google redirects with ?code=... → POST to /auth/google → store tokens + redirect home.
  */
 
 import { useEffect, useState, useRef } from 'react';
@@ -21,7 +16,6 @@ export default function GoogleCallbackPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [error, setError] = useState('');
-  // Guard against StrictMode double-invocation
   const exchanged = useRef(false);
 
   useEffect(() => {
@@ -45,11 +39,11 @@ export default function GoogleCallbackPage() {
 
   if (error) {
     return (
-      <div className="flex min-h-[80vh] items-center justify-center px-4">
+      <div className="flex min-h-[80vh] items-center justify-center px-4 bg-bg">
         <div className="text-center space-y-4">
-          <h1 className="text-xl font-bold text-danger-700">Authentication Failed</h1>
-          <p className="text-sm text-neutral-500">{error}</p>
-          <Link to="/login" className="text-primary-600 hover:underline text-sm">
+          <h1 className="text-xl font-bold text-[#F87171]">Authentication Failed</h1>
+          <p className="text-sm text-[rgba(248,249,255,.45)]">{error}</p>
+          <Link to="/login" className="text-purple-light hover:underline text-sm">
             Back to login
           </Link>
         </div>
@@ -58,12 +52,11 @@ export default function GoogleCallbackPage() {
   }
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center">
+    <div className="flex min-h-[80vh] items-center justify-center bg-bg">
       <div className="text-center space-y-3">
         <Spinner size="lg" />
-        <p className="text-sm text-neutral-500">Completing sign-in with Google...</p>
+        <p className="text-sm text-[rgba(248,249,255,.45)]">Completing sign-in with Google...</p>
       </div>
     </div>
   );
 }
-

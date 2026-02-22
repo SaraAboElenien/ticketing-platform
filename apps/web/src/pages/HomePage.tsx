@@ -1,5 +1,6 @@
 /**
  * HomePage — landing page with hero section and featured events.
+ * TicketHub dark theme: hero grid, purple glow, gradient text, stats.
  */
 
 import { Link } from 'react-router-dom';
@@ -8,64 +9,86 @@ import { useEvents } from '@/hooks/useEvents';
 import EventCard from '@/components/events/EventCard';
 import Button from '@/components/ui/Button';
 import Spinner from '@/components/ui/Spinner';
+import FloatingTicketCards from '@/components/ui/FloatingTicketCards';
 
 export default function HomePage() {
   const { isAuthenticated } = useAuth();
-  // Fetch a small set of published events for the featured section
   const { events, loading } = useEvents({ limit: 6, status: 'published' as any, sortBy: 'date', sortOrder: 'asc' });
 
   return (
-    <div>
-      {/* ── Hero Section ──────────────────────────────────────────────── */}
-      <section className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 text-white overflow-hidden">
-        {/* Decorative accent */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary-500/20 rounded-full blur-3xl"></div>
-        
-        <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-          <div className="max-w-2xl">
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Discover &amp; Book Amazing Events
-            </h1>
-            <p className="mt-6 text-lg text-primary-100 leading-relaxed">
-              Browse upcoming concerts, conferences, and more. Secure your tickets
-              instantly with our fast, reliable booking system.
-            </p>
-            <div className="mt-10 flex flex-wrap gap-4">
-              <Link to="/events">
-                <Button size="lg" className=" text-primary-700 hover:bg-primary-50 shadow-lg hover:shadow-xl transition-all">
-                  Browse Events
-                </Button>
+    <div className="bg-bg">
+      {/* Hero */}
+      <section className="min-h-screen grid grid-cols-1 lg:grid-cols-2 items-center px-4 sm:px-8 lg:px-[52px] pt-[100px] pb-20 relative overflow-hidden gap-10">
+        <div className="hero-grid grid-drift absolute inset-0" />
+        <div
+          className="glow-pulse absolute w-[700px] h-[700px] rounded-full pointer-events-none hidden lg:block"
+          style={{ background: 'radial-gradient(circle, rgba(124,58,237,.15) 0%, transparent 70%)', top: '50%', left: '30%', transform: 'translate(-50%,-55%)' }}
+        />
+        <div className="relative z-[2]">
+          <div className="fade-up-1 inline-flex items-center gap-2 text-[0.78rem] font-medium tracking-[0.08em] uppercase text-purple-light mb-6">
+            <span className="w-6 h-px bg-purple-light" />
+            Event Discovery Platform
+          </div>
+          <h1 className="fade-up-2 hero-h1 font-bold leading-[1.1] tracking-[-0.03em] text-[#F8F9FF]">
+            Discover &amp; Book
+            <br />
+            <em className="not-italic gradient-text">Amazing Events</em>
+          </h1>
+          <p className="fade-up-3 mt-5 text-[rgba(248,249,255,.45)] text-[1.05rem] leading-[1.7] max-w-[480px]">
+            Browse upcoming concerts, conferences, and more. Secure your tickets instantly with our fast, reliable booking system.
+          </p>
+          <div className="fade-up-4 flex items-center gap-[14px] mt-9">
+            <Link to="/events" className="no-underline">
+              <Button size="lg">Browse Events</Button>
+            </Link>
+            {!isAuthenticated && (
+              <Link to="/register" className="no-underline">
+                <Button variant="secondary" size="lg">Sign Up Free</Button>
               </Link>
-              {!isAuthenticated && (
-                <Link to="/register">
-                  <Button size="lg" variant="ghost" className="text-white border-2 border-white/40 hover:bg-white/10 hover:border-white/60 backdrop-blur-sm transition-all">
-                    Sign Up Free
-                  </Button>
-                </Link>
-              )}
+            )}
+          </div>
+          <div className="fade-up-5 flex gap-9 mt-14 pt-10 border-t border-[rgba(255,255,255,.07)]">
+            <div>
+              <div className="text-[1.6rem] font-bold tracking-[-0.02em] text-[#F8F9FF]">50K+</div>
+              <div className="text-[0.8rem] text-[rgba(248,249,255,.45)] mt-0.5">Happy Attendees</div>
+            </div>
+            <div>
+              <div className="text-[1.6rem] font-bold tracking-[-0.02em] text-[#F8F9FF]">500+</div>
+              <div className="text-[0.8rem] text-[rgba(248,249,255,.45)] mt-0.5">Monthly Events</div>
+            </div>
+            <div>
+              <div className="text-[1.6rem] font-bold tracking-[-0.02em] text-[#F8F9FF]">99%</div>
+              <div className="text-[0.8rem] text-[rgba(248,249,255,.45)] mt-0.5">Satisfaction</div>
             </div>
           </div>
         </div>
+        <div className="relative z-[2] hidden lg:flex items-center justify-center fade-up-4">
+          <FloatingTicketCards variant="hero" />
+        </div>
       </section>
 
-      {/* ── Featured Events ───────────────────────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold text-neutral-900">Upcoming Events</h2>
-          <Link to="/events" className="text-sm font-medium text-primary-600 hover:underline">
-            View all →
+      <div className="h-px bg-[rgba(255,255,255,.07)] mx-4 sm:mx-8 lg:mx-[52px]" />
+
+      {/* Featured Events */}
+      <section className="py-[88px] px-4 sm:px-8 lg:px-[52px]">
+        <div className="flex items-end justify-between mb-11">
+          <div>
+            <div className="text-[0.75rem] font-medium tracking-[0.1em] uppercase text-purple-light mb-2.5">Don&apos;t miss out</div>
+            <h2 className="text-[1.9rem] font-bold tracking-[-0.025em] text-[#F8F9FF]">Upcoming Events</h2>
+          </div>
+          <Link to="/events" className="text-[0.88rem] text-[rgba(248,249,255,.45)] no-underline flex items-center gap-1 hover:text-[#F8F9FF] transition-all group">
+            View all <span className="group-hover:translate-x-1 transition-transform">→</span>
           </Link>
         </div>
 
         {loading ? (
           <Spinner className="py-12" size="lg" />
         ) : events.length === 0 ? (
-          <p className="text-center text-neutral-500 py-12">
+          <p className="text-center text-[rgba(248,249,255,.45)] py-12">
             No upcoming events right now. Check back soon!
           </p>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {events.map((event: any) => (
               <EventCard key={event._id} event={event} />
             ))}
@@ -75,4 +98,3 @@ export default function HomePage() {
     </div>
   );
 }
-

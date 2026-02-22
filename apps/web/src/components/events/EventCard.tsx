@@ -1,6 +1,6 @@
 /**
  * EventCard — grid card for the events listing page.
- * Displays name, date, venue, price, and availability badge.
+ * TicketHub dark theme: card-visual, ticket tear separator, status badge, price footer.
  */
 
 import { Link } from 'react-router-dom';
@@ -20,50 +20,62 @@ interface EventCardProps {
   };
 }
 
+/** Default gradient and emoji; can derive from event name/type if needed */
+function getCardVisual(eventName: string) {
+  const hash = eventName.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  const options = [
+    { gradient: 'linear-gradient(135deg,#1a0a2e,#2D1060)', emoji: '🎭' },
+    { gradient: 'linear-gradient(135deg,#071626,#0C2545)', emoji: '🎷' },
+    { gradient: 'linear-gradient(135deg,#071a12,#0A2E1A)', emoji: '🎸' },
+    { gradient: 'linear-gradient(135deg,#0d0a1e,#1a0050)', emoji: '🎆' },
+  ];
+  return options[hash % options.length];
+}
+
 export default function EventCard({ event }: EventCardProps) {
+  const visual = getCardVisual(event.name);
+  const canBook = event.availableTickets > 0 && event.status === 'published';
+
   return (
     <Link
       to={`/events/${event._id}`}
-      className="group flex flex-col rounded-2xl border border-neutral-200 bg-white shadow-sm transition-all hover:shadow-lg hover:-translate-y-1 overflow-hidden"
+      className="block group"
+      data-reveal
     >
-      {/* Card body */}
-      <div className="flex flex-1 flex-col p-5">
-        <div className="mb-3 flex items-start justify-between gap-2">
-          <h3 className="text-lg font-semibold text-neutral-900 group-hover:text-primary-600 transition-colors duration-200 line-clamp-2">
+      <div className="bg-bg2 border border-[rgba(255,255,255,.07)] rounded-2xl overflow-hidden hover:border-[rgba(124,58,237,.4)] hover:shadow-[0_20px_48px_rgba(0,0,0,.4),0_0_0_1px_rgba(124,58,237,.1)] transition-all h-full flex flex-col">
+        <div
+          className="card-visual relative h-40 flex items-center justify-center overflow-hidden"
+          style={{ background: visual.gradient }}
+        >
+          <div className="absolute w-[180px] h-[180px] rounded-full opacity-35 group-hover:opacity-60 transition-opacity bg-purple blur-[40px]" />
+          <span className="text-5xl relative z-[1] group-hover:scale-110 group-hover:-translate-y-[3px] transition-transform duration-[350ms]">{visual.emoji}</span>
+        </div>
+        <div className="card-sep relative h-px mx-5 border-t border-dashed border-[rgba(255,255,255,.08)]" />
+        <div className="px-[22px] py-5 flex-1 flex flex-col">
+          <AvailabilityBadge availableTickets={event.availableTickets} totalTickets={event.totalTickets} />
+          <h3 className="text-[1.1rem] font-semibold tracking-[-0.015em] mb-3.5 text-[#F8F9FF] line-clamp-2 mt-2">
             {event.name}
           </h3>
-          <AvailabilityBadge
-            availableTickets={event.availableTickets}
-            totalTickets={event.totalTickets}
-          />
+          <div className="flex flex-col gap-[7px]">
+            <div className="flex items-center gap-[9px] text-[0.83rem] text-[rgba(248,249,255,.45)]">📅 {formatDate(event.date)}</div>
+            <div className="flex items-center gap-[9px] text-[0.83rem] text-[rgba(248,249,255,.45)]">📍 {event.venue}</div>
+          </div>
         </div>
-
-        {/* Meta info */}
-        <div className="mt-auto space-y-1.5 text-sm text-neutral-500">
-          <p className="flex items-center gap-1.5">
-            {/* Calendar icon */}
-            <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-            </svg>
-            {formatDate(event.date)}
-          </p>
-          <p className="flex items-center gap-1.5">
-            {/* Location icon */}
-            <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-            </svg>
-            {event.venue}
-          </p>
+        <div className="flex items-center justify-between px-[22px] py-4 border-t border-[rgba(255,255,255,.07)]">
+          <div className="text-[1.2rem] font-bold tracking-[-0.02em] text-[#F8F9FF]">
+            {formatPrice(event.price)} <span className="text-[0.75rem] text-[rgba(248,249,255,.45)] font-normal">/ ticket</span>
+          </div>
+          {canBook ? (
+            <span className="px-[18px] py-[9px] rounded-lg text-[0.83rem] font-medium border-0 bg-purple text-[#F8F9FF] cursor-pointer group-hover:bg-purple-light group-hover:-translate-y-px group-hover:shadow-[0_6px_18px_rgba(124,58,237,.3)] transition-all">
+              Get Tickets
+            </span>
+          ) : (
+            <span className="px-[18px] py-[9px] rounded-lg text-[0.83rem] font-medium border-0 bg-[rgba(255,255,255,.05)] text-[rgba(248,249,255,.45)] cursor-not-allowed">
+              Sold Out
+            </span>
+          )}
         </div>
-      </div>
-
-      {/* Footer with price */}
-      <div className="border-t border-neutral-100 bg-gradient-to-r from-primary-50 to-transparent px-5 py-3">
-        <span className="text-lg font-bold text-primary-600">{formatPrice(event.price)}</span>
-        <span className="ml-1 text-xs text-neutral-400">/ ticket</span>
       </div>
     </Link>
   );
 }
-

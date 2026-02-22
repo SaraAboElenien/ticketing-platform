@@ -57,14 +57,14 @@ export default function Modal({
       aria-modal="true"
       aria-label={title}
     >
-      <div className={`w-full ${maxWidth} rounded-xl bg-white shadow-xl`}>
+      <div className={`w-full ${maxWidth} rounded-xl bg-bg2 border border-[rgba(255,255,255,.07)] shadow-xl`}>
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between border-b border-neutral-200 px-6 py-4">
-            <h2 className="text-lg font-semibold text-neutral-900">{title}</h2>
+          <div className="flex items-center justify-between border-b border-[rgba(255,255,255,.07)] px-6 py-4">
+            <h2 className="text-lg font-semibold text-[#F8F9FF]">{title}</h2>
             <button
               onClick={onClose}
-              className="rounded-lg p-1 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600"
+              className="rounded-lg p-1 text-[rgba(248,249,255,.45)] hover:bg-[rgba(255,255,255,.05)] hover:text-[#F8F9FF]"
               aria-label="Close dialog"
             >
               {/* X icon */}
@@ -75,7 +75,7 @@ export default function Modal({
           </div>
         )}
         {/* Body */}
-        <div className="px-6 py-4">{children}</div>
+        <div className="px-6 py-4 text-[#F8F9FF]">{children}</div>
       </div>
     </div>
   );

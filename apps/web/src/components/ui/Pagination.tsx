@@ -17,12 +17,12 @@ export default function Pagination({ meta, onPageChange }: PaginationProps) {
 
   return (
     <nav
-      className="flex items-center justify-between border-t border-neutral-200 pt-4"
+      className="flex items-center justify-between border-t border-[rgba(255,255,255,.07)] pt-4"
       aria-label="Pagination"
     >
-      <p className="text-sm text-neutral-600">
-        Page <span className="font-medium">{page}</span> of{' '}
-        <span className="font-medium">{totalPages}</span>
+      <p className="text-sm text-[rgba(248,249,255,.45)]">
+        Page <span className="font-medium text-[#F8F9FF]">{page}</span> of{' '}
+        <span className="font-medium text-[#F8F9FF]">{totalPages}</span>
       </p>
       <div className="flex gap-2">
         <Button

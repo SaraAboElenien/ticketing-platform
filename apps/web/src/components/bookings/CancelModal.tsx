@@ -5,6 +5,7 @@
 import { useState } from 'react';
 import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
+import toast from 'react-hot-toast';
 import * as bookingsApi from '@/api/bookings.api';
 import { getErrorMessage } from '@/utils/apiError';
 
@@ -34,6 +35,7 @@ export default function CancelModal({
     try {
       const res = await bookingsApi.cancelBooking(bookingId, { reason: reason || undefined });
       if (res.success) {
+        toast.success('Booking cancelled');
         onSuccess?.();
         onClose();
       } else {
@@ -50,22 +52,22 @@ export default function CancelModal({
     <Modal open={open} onClose={onClose} title="Cancel Booking">
       <div className="space-y-4">
         {error && (
-          <div className="rounded-lg bg-danger-50 p-3 text-sm text-danger-700" role="alert">
+          <div className="rounded-[10px] bg-[rgba(220,38,38,.1)] border border-[rgba(220,38,38,.2)] p-3 text-sm text-[#F87171]" role="alert">
             {error}
           </div>
         )}
 
-        <p className="text-sm text-neutral-700">
+        <p className="text-sm text-[rgba(248,249,255,.45)]">
           Are you sure you want to cancel your booking for{' '}
-          <span className="font-semibold">{eventName}</span>? This action cannot be undone.
+          <span className="font-semibold text-[#F8F9FF]">{eventName}</span>? This action cannot be undone.
         </p>
 
         <div>
-          <label className="block text-sm font-medium text-neutral-700 mb-1">
-            Reason <span className="text-neutral-400">(optional)</span>
+          <label className="block text-sm font-medium text-[rgba(248,249,255,.45)] mb-1">
+            Reason <span className="text-[rgba(248,249,255,.2)]">(optional)</span>
           </label>
           <textarea
-            className="block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm placeholder:text-neutral-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="block w-full rounded-[10px] border border-[rgba(255,255,255,.07)] bg-bg2 px-3 py-2 text-sm text-[#F8F9FF] placeholder-[rgba(248,249,255,.2)] focus:border-[rgba(124,58,237,.5)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(124,58,237,.12)]"
             rows={3}
             placeholder="Why are you cancelling?"
             value={reason}

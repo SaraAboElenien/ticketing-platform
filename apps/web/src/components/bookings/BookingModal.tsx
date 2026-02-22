@@ -10,6 +10,7 @@ import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import { generateIdempotencyKey } from '@/utils/idempotency';
 import { formatPrice } from '@/utils/formatters';
+import toast from 'react-hot-toast';
 import * as bookingsApi from '@/api/bookings.api';
 import { getErrorMessage } from '@/utils/apiError';
 
@@ -60,11 +61,20 @@ export default function BookingModal({ open, onClose, event, onSuccess }: Bookin
         setSuccess(true);
         setBookingResult(res.data);
         onSuccess?.();
+        toast.success(
+          quantity > 1
+            ? `${quantity} tickets added to your bookings`
+            : 'Ticket added to your bookings'
+        );
       } else {
-        setError(res.message || 'Booking failed');
+        const msg = res.message || 'Booking failed';
+        setError(msg);
+        toast.error(msg);
       }
     } catch (err) {
-      setError(getErrorMessage(err));
+      const msg = getErrorMessage(err);
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -74,19 +84,18 @@ export default function BookingModal({ open, onClose, event, onSuccess }: Bookin
     <Modal open={open} onClose={onClose} title={success ? 'Booking Confirmed!' : 'Book Tickets'}>
       {success ? (
         <div className="space-y-4 text-center">
-          {/* Success state */}
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-success-100">
-            <svg className="h-7 w-7 text-success-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[rgba(5,150,105,.2)]">
+            <svg className="h-7 w-7 text-[#6EE7B7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <p className="text-neutral-700">
-            You&apos;ve booked <span className="font-semibold">{quantity}</span> ticket
-            {quantity > 1 ? 's' : ''} for <span className="font-semibold">{event.name}</span>.
+          <p className="text-[rgba(248,249,255,.45)]">
+            You&apos;ve booked <span className="font-semibold text-[#F8F9FF]">{quantity}</span> ticket
+            {quantity > 1 ? 's' : ''} for <span className="font-semibold text-[#F8F9FF]">{event.name}</span>.
           </p>
           {bookingResult?.ticketNumber && (
-            <p className="text-sm text-neutral-500">
-              Ticket #: <span className="font-mono font-medium">{bookingResult.ticketNumber}</span>
+            <p className="text-sm text-[rgba(248,249,255,.45)]">
+              Ticket #: <span className="font-mono font-medium text-purple-light">{bookingResult.ticketNumber}</span>
             </p>
           )}
           <Button onClick={onClose} fullWidth>
@@ -96,47 +105,45 @@ export default function BookingModal({ open, onClose, event, onSuccess }: Bookin
       ) : (
         <div className="space-y-5">
           {error && (
-            <div className="rounded-lg bg-danger-50 p-3 text-sm text-danger-700" role="alert">
+            <div className="rounded-[10px] bg-[rgba(220,38,38,.1)] border border-[rgba(220,38,38,.2)] p-3 text-sm text-[#F87171]" role="alert">
               {error}
             </div>
           )}
 
           <div>
-            <p className="text-sm text-neutral-500 mb-1">Event</p>
-            <p className="font-medium text-neutral-900">{event.name}</p>
+            <p className="text-sm text-[rgba(248,249,255,.45)] mb-1">Event</p>
+            <p className="font-medium text-[#F8F9FF]">{event.name}</p>
           </div>
 
-          {/* Quantity selector */}
           <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-1">Quantity</label>
+            <label className="block text-sm font-medium text-[rgba(248,249,255,.45)] mb-1">Quantity</label>
             <div className="flex items-center gap-3">
               <button
                 type="button"
-                className="flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-300 text-neutral-600 hover:bg-neutral-50 disabled:opacity-40"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-[rgba(255,255,255,.07)] text-[rgba(248,249,255,.45)] hover:bg-[rgba(255,255,255,.05)] disabled:opacity-40 bg-bg2"
                 disabled={quantity <= 1}
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
               >
                 −
               </button>
-              <span className="w-8 text-center font-semibold text-neutral-900">{quantity}</span>
+              <span className="w-8 text-center font-semibold text-[#F8F9FF]">{quantity}</span>
               <button
                 type="button"
-                className="flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-300 text-neutral-600 hover:bg-neutral-50 disabled:opacity-40"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-[rgba(255,255,255,.07)] text-[rgba(248,249,255,.45)] hover:bg-[rgba(255,255,255,.05)] disabled:opacity-40 bg-bg2"
                 disabled={quantity >= maxQty}
                 onClick={() => setQuantity((q) => Math.min(maxQty, q + 1))}
               >
                 +
               </button>
-              <span className="text-sm text-neutral-400">
+              <span className="text-sm text-[rgba(248,249,255,.45)]">
                 ({event.availableTickets} available)
               </span>
             </div>
           </div>
 
-          {/* Total */}
-          <div className="flex items-center justify-between rounded-lg bg-neutral-50 px-4 py-3">
-            <span className="text-sm text-neutral-600">Total</span>
-            <span className="text-lg font-bold text-primary-600">
+          <div className="flex items-center justify-between rounded-lg bg-bg3 border border-[rgba(255,255,255,.07)] px-4 py-3">
+            <span className="text-sm text-[rgba(248,249,255,.45)]">Total</span>
+            <span className="text-lg font-bold text-purple-light">
               {formatPrice(event.price * quantity)}
             </span>
           </div>

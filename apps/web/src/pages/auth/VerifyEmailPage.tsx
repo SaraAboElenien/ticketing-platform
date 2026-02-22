@@ -12,6 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
 import * as authApi from '@/api/auth.api';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import AuthPageLayout from '@/components/auth/AuthPageLayout';
 import { getErrorMessage } from '@/utils/apiError';
 
 const verifySchema = z.object({
@@ -24,21 +25,14 @@ export default function VerifyEmailPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
-
-  // The email is passed via router state from the register page
-  const emailFromState = (location.state as any)?.email ?? '';
+  const emailFromState = (location.state as { email?: string })?.email ?? '';
 
   const [serverError, setServerError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    getValues,
-    formState: { errors },
-  } = useForm<VerifyForm>({
+  const { register, handleSubmit, getValues, formState: { errors } } = useForm<VerifyForm>({
     resolver: zodResolver(verifySchema),
     defaultValues: { email: emailFromState, code: '' },
   });
@@ -85,61 +79,43 @@ export default function VerifyEmailPage() {
   };
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center px-4">
-      <div className="w-full max-w-sm space-y-6">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-neutral-900">Verify your email</h1>
-          <p className="mt-1 text-sm text-neutral-500">
-            We sent a 6-digit code to your inbox.
-          </p>
+    <AuthPageLayout
+      title="Verify your email"
+      subtitle="We sent a 6-digit code to your inbox."
+      footerText="Back to"
+      footerLinkTo="/login"
+      footerLinkLabel="Log in"
+    >
+      {serverError && (
+        <div className="rounded-[10px] bg-[rgba(220,38,38,.1)] border border-[rgba(220,38,38,.2)] p-3 text-sm text-[#F87171] mb-4" role="alert">
+          {serverError}
         </div>
-
-        {serverError && (
-          <div className="rounded-lg bg-danger-50 p-3 text-sm text-danger-700" role="alert">
-            {serverError}
-          </div>
-        )}
-        {successMsg && (
-          <div className="rounded-lg bg-success-50 p-3 text-sm text-success-700" role="status">
-            {successMsg}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <Input
-            label="Email"
-            type="email"
-            placeholder="you@example.com"
-            error={errors.email?.message}
-            {...register('email')}
-          />
-          <Input
-            label="Verification Code"
-            placeholder="123456"
-            maxLength={6}
-            error={errors.code?.message}
-            {...register('code')}
-          />
-          <Button type="submit" fullWidth loading={loading}>
-            Verify
-          </Button>
-        </form>
-
-        <div className="flex items-center justify-between text-sm">
-          <button
-            type="button"
-            onClick={handleResend}
-            disabled={resending}
-            className="text-primary-600 hover:underline disabled:opacity-50"
-          >
-            {resending ? 'Sending...' : 'Resend code'}
-          </button>
-          <Link to="/login" className="text-neutral-500 hover:underline">
-            Back to login
-          </Link>
+      )}
+      {successMsg && (
+        <div className="rounded-[10px] bg-[rgba(5,150,105,.12)] border border-[rgba(5,150,105,.2)] p-3 text-sm text-[#6EE7B7] mb-4" role="status">
+          {successMsg}
         </div>
+      )}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <Input label="Email" type="email" placeholder="you@example.com" error={errors.email?.message} {...register('email')} />
+        <Input label="Verification Code" placeholder="123456" maxLength={6} error={errors.code?.message} {...register('code')} />
+        <Button type="submit" fullWidth loading={loading}>
+          Verify
+        </Button>
+      </form>
+      <div className="flex items-center justify-between text-sm mt-4">
+        <button
+          type="button"
+          onClick={handleResend}
+          disabled={resending}
+          className="text-purple-light hover:underline disabled:opacity-50"
+        >
+          {resending ? 'Sending...' : 'Resend code'}
+        </button>
+        <Link to="/login" className="text-[rgba(248,249,255,.45)] hover:underline">
+          Back to login
+        </Link>
       </div>
-    </div>
+    </AuthPageLayout>
   );
 }
-
