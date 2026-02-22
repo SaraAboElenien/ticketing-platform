@@ -10,7 +10,13 @@
 import axios, { InternalAxiosRequestConfig, AxiosError } from 'axios';
 import { API_PREFIX } from '@/types';
 
-const API_URL = import.meta.env.VITE_API_URL || '';
+const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, ''); // no trailing slash
+
+if (!API_URL && import.meta.env.PROD) {
+  console.error(
+    '[TicketHub] VITE_API_URL is not set. Set it in your deployment (e.g. Vercel Environment Variables) to your API base URL (e.g. https://your-api.vercel.app).'
+  );
+}
 
 const client = axios.create({
   baseURL: `${API_URL}${API_PREFIX}`,
