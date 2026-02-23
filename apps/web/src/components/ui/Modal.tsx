@@ -48,7 +48,7 @@ export default function Modal({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-x-hidden"
       onClick={(e) => {
         // Close on backdrop click
         if (e.target === overlayRef.current) onClose();
@@ -57,7 +57,7 @@ export default function Modal({
       aria-modal="true"
       aria-label={title}
     >
-      <div className={`w-full ${maxWidth} rounded-xl bg-bg2 border border-[rgba(255,255,255,.07)] shadow-xl`}>
+      <div className={`w-full min-w-0 ${maxWidth} max-w-[min(100%,calc(100vw-2rem))] rounded-xl bg-bg2 border border-[rgba(255,255,255,.07)] shadow-xl`}>
         {/* Header */}
         {title && (
           <div className="flex items-center justify-between border-b border-[rgba(255,255,255,.07)] px-6 py-4">
@@ -75,7 +75,7 @@ export default function Modal({
           </div>
         )}
         {/* Body */}
-        <div className="px-6 py-4 text-[#F8F9FF]">{children}</div>
+        <div className="px-6 py-4 text-[#F8F9FF] overflow-x-hidden">{children}</div>
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputClass = `
       field-input block w-full py-[13px] pr-4 text-[0.9rem]
       disabled:cursor-not-allowed disabled:opacity-60
-      ${icon ? 'pl-10' : 'pl-4'}
+      ${icon ? 'pl-[3.25rem]' : 'pl-4'}
       ${error ? 'border-[rgba(248,81,73,.5)]' : ''}
       ${className}
     `.trim().replace(/\s+/g, ' ');

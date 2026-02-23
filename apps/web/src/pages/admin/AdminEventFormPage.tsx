@@ -217,7 +217,7 @@ export default function AdminEventFormPage() {
           )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-0">
-            <div className="mb-[22px]">
+            <div className="mb-6">
               <label className="block text-[0.8rem] font-medium text-[rgba(248,249,255,.45)] mb-2 tracking-[0.01em]">
                 Event Icon <span className="text-[0.72rem] text-[rgba(248,249,255,.2)] font-normal ml-1.5">— pick an emoji</span>
               </label>
@@ -236,25 +236,25 @@ export default function AdminEventFormPage() {
               </div>
             </div>
 
-            <div className="mb-[22px]">
+            <div className="mb-6">
               <Input label="Event Name" placeholder="Summer Concert 2026" icon="✏️" error={errors.name?.message} {...register('name')} />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-[22px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               <Input label="Date & Time" type="datetime-local" icon="📅" error={errors.date?.message} {...register('date')} />
               <Input label="Venue" placeholder="Central Park" icon="📍" error={errors.venue?.message} {...register('venue')} />
             </div>
 
-            <div className="h-px bg-[rgba(255,255,255,.07)] my-6" />
+            <div className="h-px bg-[rgba(255,255,255,.07)] my-7" />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-[22px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
               <Input label="Total Tickets" type="number" icon="🎟" error={errors.totalTickets?.message} {...register('totalTickets')} />
               <Input label="Price ($)" type="number" step="0.01" icon="💵" error={errors.price?.message} {...register('price')} />
             </div>
 
-            <div className="h-px bg-[rgba(255,255,255,.07)] my-6" />
+            <div className="h-px bg-[rgba(255,255,255,.07)] my-7" />
 
-            <div className="mb-[22px]">
+            <div className="mb-6">
               <label className="block text-[0.8rem] font-medium text-[rgba(248,249,255,.45)] mb-2 tracking-[0.01em]">Status</label>
               <div className={`grid gap-[10px] ${isEditMode ? 'grid-cols-4' : 'grid-cols-3'}`}>
                 {statusOptions.map((opt) => (
@@ -275,7 +275,7 @@ export default function AdminEventFormPage() {
               {errors.status && <p className="mt-1 text-[0.8rem] text-[#F87171]">{errors.status.message}</p>}
             </div>
 
-            <div className="grid mt-8 gap-3" style={{ gridTemplateColumns: '1fr 1.6fr' }}>
+            <div className="grid mt-10 gap-3" style={{ gridTemplateColumns: '1fr 1.6fr' }}>
               <button
                 type="button"
                 onClick={() => navigate('/admin/events')}

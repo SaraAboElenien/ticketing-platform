@@ -82,7 +82,7 @@ export default function BookingModal({ open, onClose, event, onSuccess }: Bookin
   };
 
   return (
-    <Modal open={open} onClose={onClose} title={success ? 'Booking Confirmed!' : 'Book Tickets'}>
+    <Modal open={open} onClose={onClose} title={success ? 'Booking Confirmed!' : 'Book Tickets'} maxWidth="max-w-[min(28rem,calc(100vw-2rem))]">
       {success ? (
         <div className="space-y-4 text-center">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[rgba(5,150,105,.2)]">
@@ -148,7 +148,7 @@ export default function BookingModal({ open, onClose, event, onSuccess }: Bookin
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             <Button variant="secondary" fullWidth onClick={onClose}>
               Cancel
             </Button>

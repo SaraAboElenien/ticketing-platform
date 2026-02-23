@@ -108,8 +108,8 @@ export default function LoginPage() {
         <Alert className="mb-4">{serverError}</Alert>
       )}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <Input label="Email" type="email" placeholder="you@example.com" icon="📧" error={errors.email?.message} {...register('email')} />
-        <Input label="Password" type="password" placeholder="••••••••" icon="🔒" error={errors.password?.message} {...register('password')} />
+        <Input label="Email" type="email" placeholder="you@example.com" error={errors.email?.message} {...register('email')} />
+        <Input label="Password" type="password" placeholder="••••••••" error={errors.password?.message} {...register('password')} />
         <div className="flex justify-end">
           <Link to="/forgot-password" className="text-[0.85rem] text-purple-light no-underline hover:underline">
             Forgot password?

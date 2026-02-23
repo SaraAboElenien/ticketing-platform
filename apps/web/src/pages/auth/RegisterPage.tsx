@@ -109,9 +109,9 @@ export default function RegisterPage() {
         <Alert className="mb-4">{serverError}</Alert>
       )}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <Input label="Full Name" placeholder="Jane Doe" icon="👤" error={errors.name?.message} {...register('name')} />
-        <Input label="Email" type="email" placeholder="you@example.com" icon="📧" error={errors.email?.message} {...register('email')} />
-        <Input label="Password" type="password" placeholder="Min. 8 characters" icon="🔒" error={errors.password?.message} {...register('password')} />
+        <Input label="Full Name" placeholder="Jane Doe" error={errors.name?.message} {...register('name')} />
+        <Input label="Email" type="email" placeholder="you@example.com" error={errors.email?.message} {...register('email')} />
+        <Input label="Password" type="password" placeholder="Min. 8 characters" error={errors.password?.message} {...register('password')} />
         <p className="text-[0.75rem] text-[rgba(248,249,255,.2)] mt-1.5">
           Min 8 characters, 1 uppercase, 1 lowercase, 1 number.
         </p>

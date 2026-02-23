@@ -130,23 +130,19 @@ export default function Header() {
         aria-label="Navigation menu"
       >
         <div className="flex flex-col h-full pt-16">
-          <div className="flex-1 overflow-auto py-2">
+          <div className="flex-1 overflow-auto py-2 min-h-0">
             <p className="px-4 py-2 text-[0.7rem] font-semibold tracking-wider text-[rgba(248,249,255,.35)] uppercase">
               Navigation
             </p>
             <Link to="/events" className={mobileLinkClass('/events')} onClick={() => setMenuOpen(false)}>
               Events
             </Link>
-            {isAuthenticated && (
-              <Link to="/bookings" className={mobileLinkClass('/bookings')} onClick={() => setMenuOpen(false)}>
-                My Bookings
-              </Link>
-            )}
-            {isAdmin && (
+            <Link to="/bookings" className={mobileLinkClass('/bookings')} onClick={() => setMenuOpen(false)}>
+              My Bookings
+            </Link>
             <Link to="/admin/events" className={mobileLinkClass('/admin/events', true)} onClick={() => setMenuOpen(false)}>
               Admin
             </Link>
-            )}
           </div>
           <div className="p-4 border-t border-[rgba(255,255,255,.07)] space-y-2">
             {isAuthenticated ? (
