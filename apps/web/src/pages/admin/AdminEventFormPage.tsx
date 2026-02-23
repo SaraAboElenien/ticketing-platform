@@ -237,26 +237,26 @@ export default function AdminEventFormPage() {
             </div>
 
             <div className="mb-6">
-              <Input label="Event Name" placeholder="Summer Concert 2026" icon="✏️" error={errors.name?.message} {...register('name')} />
+              <Input label="Event Name" placeholder="Summer Concert 2026"  error={errors.name?.message} {...register('name')} />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              <Input label="Date & Time" type="datetime-local" icon="📅" error={errors.date?.message} {...register('date')} />
-              <Input label="Venue" placeholder="Central Park" icon="📍" error={errors.venue?.message} {...register('venue')} />
+              <Input label="Date & Time" type="datetime-local" error={errors.date?.message} {...register('date')} />
+              <Input label="Venue" placeholder="Central Park"  error={errors.venue?.message} {...register('venue')} />
             </div>
 
             <div className="h-px bg-[rgba(255,255,255,.07)] my-7" />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              <Input label="Total Tickets" type="number" icon="🎟" error={errors.totalTickets?.message} {...register('totalTickets')} />
-              <Input label="Price ($)" type="number" step="0.01" icon="💵" error={errors.price?.message} {...register('price')} />
+              <Input label="Total Tickets" type="number" error={errors.totalTickets?.message} {...register('totalTickets')} />
+              <Input label="Price ($)" type="number" step="0.01"  error={errors.price?.message} {...register('price')} />
             </div>
 
             <div className="h-px bg-[rgba(255,255,255,.07)] my-7" />
 
             <div className="mb-6">
               <label className="block text-[0.8rem] font-medium text-[rgba(248,249,255,.45)] mb-2 tracking-[0.01em]">Status</label>
-              <div className={`grid gap-[10px] ${isEditMode ? 'grid-cols-4' : 'grid-cols-3'}`}>
+              <div className={`grid gap-[10px] mb-6 ${isEditMode ? 'grid-cols-4' : 'grid-cols-3'}`}>
                 {statusOptions.map((opt) => (
                   <div key={opt.value} className="status-opt relative">
                     <input

@@ -79,7 +79,7 @@ export default function AuthPageLayout({
         <div className="relative flex items-center justify-center px-6 py-12 lg:px-16 lg:py-[60px] border-r border-[rgba(255,255,255,.07)] form-side">
           {formContent}
         </div>
-        <div className="relative overflow-hidden flex items-center justify-center bg-bg min-h-[40vh] lg:min-h-0">
+        <div className="relative overflow-hidden hidden lg:flex items-center justify-center bg-bg min-h-[40vh] lg:min-h-0">
           {rightColumn}
         </div>
       </div>
