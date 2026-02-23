@@ -129,7 +129,22 @@ export default function Header() {
         role="dialog"
         aria-label="Navigation menu"
       >
-        <div className="flex flex-col h-full pt-16">
+        <div className="flex flex-col h-full">
+          {/* Header row with close button (in flow so links are not clipped) */}
+          <div className="flex items-center justify-between px-4 h-16 border-b border-[rgba(255,255,255,.07)] shrink-0">
+            <span className="text-[0.75rem] font-semibold tracking-wider text-[rgba(248,249,255,.35)] uppercase">Menu</span>
+            <button
+              type="button"
+              className="w-10 h-10 flex items-center justify-center rounded-lg text-[rgba(248,249,255,.45)] hover:bg-[rgba(255,255,255,.08)] hover:text-[#F8F9FF] transition-colors"
+              aria-label="Close menu"
+              onClick={() => setMenuOpen(false)}
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
           <div className="flex-1 overflow-auto py-2 min-h-0">
             <p className="px-4 py-2 text-[0.7rem] font-semibold tracking-wider text-[rgba(248,249,255,.35)] uppercase">
               Navigation
@@ -173,16 +188,6 @@ export default function Header() {
             )}
           </div>
         </div>
-        <button
-          type="button"
-          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-lg text-[rgba(248,249,255,.45)] hover:bg-[rgba(255,255,255,.08)] hover:text-[#F8F9FF] transition-colors"
-          aria-label="Close menu"
-          onClick={() => setMenuOpen(false)}
-        >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
       </div>
     </header>
   );
