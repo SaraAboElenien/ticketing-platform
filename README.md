@@ -1,135 +1,115 @@
-# Ticketing Platform Backend
+# Ticketing Platform
 
-A production-grade, scalable ticketing platform backend built with Node.js, Express, TypeScript, and MongoDB. Designed for high concurrency, data integrity, and real-world production use.
+A production-grade, full-stack ticketing platform: Node.js/Express API with a React (Vite) web app. Supports high-concurrency bookings, JWT auth, idempotent operations, and a modern dark-theme UI.
 
-## 🎯 Features
+## Features
 
-- **Concurrency-Safe Booking**: Atomic operations prevent overbooking under high load
-- **JWT Authentication**: Secure token-based authentication with refresh tokens
-- **Idempotency**: All booking operations are idempotent to prevent duplicate charges
-- **Calculated Availability**: Dynamic ticket availability calculation ensures data integrity
-- **Redis Caching**: Performance optimization with smart cache invalidation
-- **Soft Deletes**: Audit trail and data recovery capability
-- **API Versioning**: Future-proof API design
-- **Serverless Ready**: Compatible with Vercel and other serverless platforms
+- **Concurrency-Safe Booking**: Atomic operations prevent overbooking under load
+- **JWT Authentication**: Token-based auth with refresh tokens; optional Google OAuth
+- **Idempotency**: Booking operations are idempotent to prevent duplicate charges
+- **Calculated Availability**: Dynamic ticket availability with atomic decrements
+- **Redis Caching**: Performance with smart cache invalidation
+- **Soft Deletes**: Audit trail and recovery for events
+- **API Versioning**: Versioned API design
+- **Web App**: React + Vite frontend with events, bookings, and admin flows
+- **Serverless Ready**: API compatible with Vercel and similar platforms
 
-## 🏗️ Architecture
+## Architecture
 
-This is a **monorepo** structure using npm workspaces and Turborepo:
+Monorepo using npm workspaces and Turborepo:
 
 ```
 ticketing-platform/
 ├── apps/
-│   └── api/              # Express backend application
+│   ├── api/          # Express backend (REST API)
+│   └── web/          # React frontend (Vite)
 ├── packages/
-│   └── shared/           # Shared types, schemas, utilities
-└── package.json          # Root workspace configuration
+│   └── shared/       # Shared types, schemas, utilities
+└── package.json      # Root workspace configuration
 ```
 
-## 🚀 Quick Start
+- **API**: Serves `/api/v1/*` (auth, events, bookings). Uses MongoDB and Redis. CORS is configured via environment; never hardcode frontend URLs in code.
+- **Web**: Single-page app that talks to the API. In development, Vite proxies `/api` to the API server; in production, set the API base URL via environment variables.
+- **Shared**: Types and utilities used by both API and web; built before running or building either app.
+
+## Quick Start
 
 ### Prerequisites
 
-- Node.js >= 18.0.0
-- MongoDB (self-hosted or Atlas free tier)
-- Redis (self-hosted or cloud free tier)
+- Node.js >= 18
+- npm >= 9
+- MongoDB (local or managed free tier)
+- Redis (local or managed free tier)
 
 ### Installation
 
 ```bash
-# Install dependencies
+# Install all dependencies (root and workspaces)
 npm install
 
-# Copy environment variables
-cp .env.example .env
+# Copy environment files (no secrets committed)
+cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env
 
-# Update .env with your configuration
+# Edit apps/api/.env and apps/web/.env with your values (see SETUP.md)
 ```
 
 ### Development
 
 ```bash
-# Start all services in development mode
-npm run dev
+# Build shared package first (required by API and web)
+npm run build --workspace=packages/shared
 
-# Start specific app
-npm run dev --workspace=apps/api
+# Run API and web in development mode
+npm run dev
 ```
 
-### Building
+- API: typically at `http://localhost:3000` (see `PORT` in `apps/api/.env`)
+- Web: typically at `http://localhost:5173` (Vite default); proxy forwards `/api` to the API
+
+### Build
 
 ```bash
 # Build all packages
 npm run build
 
-# Build specific package
+# Or build individually
+npm run build --workspace=packages/shared
 npm run build --workspace=apps/api
+npm run build --workspace=apps/web
 ```
 
-## 📦 100% Free Stack
+## Configuration
 
-All technologies used are **100% free and open source**:
+- **API**: `apps/api/.env` — see `apps/api/.env.example`. Key settings: `MONGODB_URI`, Redis (`REDIS_URL` or `REDIS_HOST`/`REDIS_PORT`), `JWT_SECRET` and `JWT_REFRESH_SECRET` (must be changed in production), `CORS_ORIGIN` (your frontend origin; no trailing slash).
+- **Web**: `apps/web/.env` — see `apps/web/.env.example`. `VITE_API_URL` is empty in dev (proxy used); in production set it to your deployed API URL.
 
-- **Node.js** - MIT License
-- **Express** - MIT License
-- **TypeScript** - Apache 2.0
-- **MongoDB** - Free Community Edition or Atlas Free Tier
-- **Redis** - Open Source or Cloud Free Tier
-- **All Libraries** - Open Source (MIT/Apache licenses)
+Never commit `.env` or expose secrets; use your deployment platform’s environment configuration for production.
 
-### Self-Hosted Setup (100% Free)
+## API Overview
 
-1. **MongoDB**: Install MongoDB Community Edition locally or use Docker
-2. **Redis**: Install Redis locally or use Docker
-3. **Deployment**: Use free VPS (Oracle Cloud Free Tier, AWS Free Tier) or Vercel Free Tier
+Base path: `/api/v1/`
 
-## 🔧 Configuration
+- **Auth**: register, login, refresh, logout, optional Google OAuth
+- **Events**: list (filter/pagination), get by id, create/update/delete (admin)
+- **Bookings**: create (requires `Idempotency-Key` header), list, get by id, cancel
 
-See `.env.example` for all configuration options. Key settings:
+See **SETUP.md** for detailed endpoint descriptions and architecture notes.
 
-- `MONGODB_URI`: MongoDB connection string
-- `REDIS_HOST` / `REDIS_PORT`: Redis connection details
-- `JWT_SECRET`: Secret key for JWT tokens (change in production!)
-- `RATE_LIMIT_MAX_REQUESTS`: Rate limiting configuration
-
-## 📚 API Documentation
-
-API endpoints are versioned: `/api/v1/`
-
-### Authentication
-- `POST /api/v1/auth/register` - User registration
-- `POST /api/v1/auth/login` - User login
-- `POST /api/v1/auth/refresh` - Refresh token
-- `POST /api/v1/auth/logout` - Logout
-
-### Events
-- `GET /api/v1/events` - List events (with filtering & pagination)
-- `GET /api/v1/events/:id` - Get event details
-- `POST /api/v1/events` - Create event (admin)
-- `PUT /api/v1/events/:id` - Update event (admin)
-- `DELETE /api/v1/events/:id` - Delete event (admin)
-
-### Bookings
-- `POST /api/v1/bookings` - Book ticket (requires idempotency key)
-- `GET /api/v1/bookings` - Get user bookings
-- `GET /api/v1/bookings/:id` - Get booking details
-- `PATCH /api/v1/bookings/:id/cancel` - Cancel booking
-
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run all tests
 npm test
 
-# Run tests for specific package
+# Run tests for a specific workspace
 npm test --workspace=apps/api
 ```
 
-## 📝 License
+## License
 
-MIT License - 100% Free and Open Source
+MIT. All dependencies used are open source (MIT/Apache etc.).
 
-## 🤝 Contributing
+## Contributing
 
-Contributions welcome! Please read the contributing guidelines first.
-
+Contributions are welcome. Follow the repository’s contributing guidelines and keep secrets and explicit external URLs out of committed files.
