@@ -33,14 +33,19 @@ export default function Modal({
     return () => document.removeEventListener('keydown', handler);
   }, [open, onClose]);
 
-  // Prevent body scroll when modal is open
+  // Prevent body scroll and horizontal viewport scroll when modal is open
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflowX = 'hidden';
     } else {
       document.body.style.overflow = '';
+      document.documentElement.style.overflowX = '';
     }
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflowX = '';
+    };
   }, [open]);
 
   if (!open) return null;
@@ -57,7 +62,7 @@ export default function Modal({
       aria-modal="true"
       aria-label={title}
     >
-      <div className={`w-full min-w-0 ${maxWidth} max-w-[min(100%,calc(100vw-2rem))] rounded-xl bg-bg2 border border-[rgba(255,255,255,.07)] shadow-xl`}>
+      <div className={`w-full min-w-0 ${maxWidth} rounded-xl bg-bg2 border border-[rgba(255,255,255,.07)] shadow-xl`}>
         {/* Header */}
         {title && (
           <div className="flex items-center justify-between border-b border-[rgba(255,255,255,.07)] px-6 py-4">
@@ -75,7 +80,7 @@ export default function Modal({
           </div>
         )}
         {/* Body */}
-        <div className="px-6 py-4 text-[#F8F9FF] overflow-x-hidden">{children}</div>
+        <div className="px-6 py-4 text-[#F8F9FF] overflow-x-hidden min-w-0">{children}</div>
       </div>
     </div>
   );
